@@ -1,0 +1,276 @@
+.header {
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border-light);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+}
+
+.nav {
+  position: relative;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 4rem;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0 var(--space-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding: 0 var(--space-8);
+  }
+}
+
+/* Brand */
+.brand {
+  flex-shrink: 0;
+}
+
+.brandLink {
+  text-decoration: none;
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-xl);
+  transition: color var(--transition-fast);
+}
+
+.brandLink:hover {
+  color: var(--color-primary-600);
+}
+
+.brandText {
+  color: var(--color-primary-600);
+  background: linear-gradient(135deg, var(--color-primary-500), var(--color-secondary-500));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Desktop Navigation */
+.desktopNav {
+  display: none;
+  align-items: center;
+  gap: var(--space-8);
+  flex: 1;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .desktopNav {
+    display: flex;
+  }
+}
+
+.navLink {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.navLink:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-surface-alt);
+}
+
+.navLink:focus {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+/* User Section */
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.userMenu {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.userInfo {
+  display: none;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-1);
+}
+
+@media (min-width: 768px) {
+  .userInfo {
+    display: flex;
+  }
+}
+
+.displayName {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+}
+
+.roleTag {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: white;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.signOutButton {
+  background: none;
+  border: 1px solid var(--color-border-medium);
+  color: var(--color-text-secondary);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.signOutButton:hover {
+  background-color: var(--color-surface-alt);
+  border-color: var(--color-border-dark);
+  color: var(--color-text-primary);
+}
+
+.signOutButton:focus {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+.loginButton {
+  background-color: var(--color-primary-500);
+  color: white;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  transition: background-color var(--transition-fast);
+}
+
+.loginButton:hover {
+  background-color: var(--color-primary-600);
+}
+
+.loginButton:focus {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+/* Mobile Menu Button */
+.mobileMenuButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .mobileMenuButton {
+    display: none;
+  }
+}
+
+.hamburger {
+  display: block;
+  width: 1.25rem;
+  height: 2px;
+  background-color: var(--color-text-secondary);
+  margin: 2px 0;
+  transition: all var(--transition-fast);
+}
+
+.mobileMenuButton:hover .hamburger {
+  background-color: var(--color-text-primary);
+}
+
+/* Mobile Navigation */
+.mobileNav {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border-light);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-100%);
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-normal);
+  z-index: var(--z-dropdown);
+}
+
+@media (min-width: 768px) {
+  .mobileNav {
+    display: none;
+  }
+}
+
+.mobileNavOpen {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobileNavLink {
+  display: block;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+  padding: var(--space-4) var(--space-6);
+  border-bottom: 1px solid var(--color-border-light);
+  transition: all var(--transition-fast);
+}
+
+.mobileNavLink:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-surface-alt);
+}
+
+.mobileNavLink:last-child {
+  border-bottom: none;
+}
+
+.mobileSignOutButton {
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  padding: var(--space-4) var(--space-6);
+  text-align: left;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.mobileSignOutButton:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-surface-alt);
+}

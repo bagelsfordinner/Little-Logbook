@@ -1,20 +1,10 @@
-import { UserRole } from '@/types/database'
+import { UserRole } from '@/lib/types/database'
 
 export const AUTH_CONFIG = {
-  // Magic link settings
-  magicLink: {
+  // Authentication settings
+  auth: {
     // Redirect after successful login
     redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
-    // Email template subject
-    emailSubject: 'Your Little Logbook invitation',
-  },
-  
-  // Invite token settings
-  inviteToken: {
-    // Default expiration time in hours
-    defaultExpirationHours: 72, // 3 days
-    // Max expiration time in hours
-    maxExpirationHours: 168, // 1 week
   },
   
   // Role-based access control
@@ -72,7 +62,7 @@ export const AUTH_CONFIG = {
   // Public routes (no auth required)
   publicRoutes: [
     '/login',
-    '/join',
+    '/signup',
     '/',
   ],
 } as const

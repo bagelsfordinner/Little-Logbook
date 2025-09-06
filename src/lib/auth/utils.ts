@@ -1,120 +1,36 @@
 import { createClient } from '@/lib/supabase/client'
 import { createClient as createServerClient } from '@/lib/supabase/server'
 import { UserRole } from '@/lib/types/database'
-import { 
-  CreateInviteParams, 
-  InviteTokenData,
-  MagicLinkData,
-  Profile 
-} from '@/lib/types/auth'
-import { AUTH_CONFIG } from './config'
-import { v4 as uuidv4 } from 'uuid'
-
-/**
- * Generate a secure invite token with role and expiration
- */
-export async function generateInviteToken(params: CreateInviteParams): Promise<string> {
-  const supabase = createClient()
-  
-  const token = uuidv4()
-  
-  // Store token data securely (you might want to encrypt this)  
-  const { error } = await (supabase as any)
-    .from('profiles')
-    .update({ invite_token: token })
-    .eq('id', 'temp') // This will be handled differently in actual implementation
-  
-  if (error) {
-    throw new Error(`Failed to generate invite token: ${error.message}`)
-  }
-  
-  return token
-}
-
-/**
- * Verify an invite token and return the associated data
- */
-export async function verifyInviteToken(token: string): Promise<InviteTokenData | null> {
-  if (!token) return null
-  
-  const supabase = createClient()
-  
-  // In a real implementation, you'd decode/decrypt the token
-  // For now, we'll query the profiles table
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('invite_token', token)
-    .single()
-  
-  if (error || !data) {
-    return null
-  }
-  
-  const profile = data as any
-  
-  // Check if token is expired (implement based on your token structure)  
-  const expiresAt = new Date(profile.created_at)
-  expiresAt.setHours(expiresAt.getHours() + AUTH_CONFIG.inviteToken.defaultExpirationHours)
-  
-  if (expiresAt < new Date()) {
-    return null
-  }
-  
-  return {
-    role: profile.role,
-    display_name: profile.display_name,
-    invited_by: profile.invited_by || '',
-    expires_at: expiresAt.toISOString(),
-  }
-}
-
-/**
- * Send magic link with invite data
- */
-export async function sendMagicLink(email: string, inviteData: MagicLinkData): Promise<void> {
-  const supabase = createClient()
-  
-  const { error } = await supabase.auth.signInWithOtp({
-    email,
-    options: {
-      emailRedirectTo: `${AUTH_CONFIG.magicLink.redirectTo}?role=${inviteData.role}`,
-      data: {
-        display_name: inviteData.display_name,
-        role: inviteData.role,
-        invited_by: inviteData.invited_by,
-      },
-    },
-  })
-  
-  if (error) {
-    throw new Error(`Failed to send magic link: ${error.message}`)
-  }
-}
+import { Profile } from '@/lib/types/auth'
 
 /**
  * Get user profile from server components
  */
 export async function getServerProfile(): Promise<Profile | null> {
-  const supabase = await createServerClient()
-  
-  const { data: { user }, error: authError } = await supabase.auth.getUser()
-  
-  if (authError || !user) {
+  try {
+    const supabase = await createServerClient()
+    
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
+      return null
+    }
+    
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', user.id)
+      .single()
+    
+    if (profileError || !profile) {
+      return null
+    }
+    
+    return profile
+  } catch (error) {
+    console.error('Error getting server profile:', error)
     return null
   }
-  
-  const { data: profile, error: profileError } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', user.id)
-    .single()
-  
-  if (profileError || !profile) {
-    return null
-  }
-  
-  return profile
 }
 
 /**
@@ -258,13 +174,6 @@ export async function deleteUser(userId: string): Promise<void> {
   }
 }
 
-/**
- * Generate magic link URL for invites
- */
-export function generateMagicLinkUrl(token: string, role: UserRole): string {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-  return `${baseUrl}/join/${role}/${token}`
-}
 
 /**
  * Validate email format
